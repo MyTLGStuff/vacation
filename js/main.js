@@ -19,7 +19,7 @@ handleFormSubmit = (e) => {
         photo_link,
         description,
     );
-
+    
     const container = document.querySelector('#destinations');
 
     container.children.length !== 0 ? document.querySelector('#destinations-title').innerHTML = 'My Wishlist' :
@@ -28,12 +28,13 @@ handleFormSubmit = (e) => {
     document
         .querySelector('#destinations')
         .appendChild(card);
+    
+    
 }
 
 resetForm = (form) => {
-    for (var i = 0; i < form.length; i++) {
-        form.elements[i].value = "";
-    }
+    for (var i = 0; i < form.length; i++)
+        form.elements[i].value = '';
 }
 
 createCard = (name, loc, pic, desc) => {
