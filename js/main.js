@@ -4,11 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
         .addEventListener('submit', handleFormSubmit);
 });
 
-handleFormSubmit = (e) => {
+const handleFormSubmit = (e) => {
     e.preventDefault();
     const destination_name = e.target.elements['destinationName'].value;
     const location_name = e.target.elements['locationName'].value;
-    const photo_link = e.target.elements['photoLink'].value;
     const description = e.target.elements['descriptionTextarea'].value;
 
     resetForm(e.target);
@@ -16,7 +15,6 @@ handleFormSubmit = (e) => {
     const card = createCard(
         destination_name,
         location_name,
-        photo_link,
         description,
     );
 
@@ -30,13 +28,13 @@ handleFormSubmit = (e) => {
         .appendChild(card);
 }
 
-resetForm = (form) => {
+const resetForm = (form) => {
     for (var i = 0; i < form.length; i++) {
         form.elements[i].value = "";
     }
 }
 
-createCard = (name, loc, pic, desc) => {
+const createCard = (name, loc, desc) => {
     const card = document.createElement('div');
     card.setAttribute('class', 'card');
     card.style.width = '15rem';
@@ -47,8 +45,14 @@ createCard = (name, loc, pic, desc) => {
     image.setAttribute('class', 'card-img-top');
     image.setAttribute('alt', name);
 
-    const url = 'img/top-travel-destination-for-visas-900x504.jpg';
-    pic.length === 0 ? image.setAttribute('src', url) : image.setAttribute('src', pic);
+    // const url = 'img/top-travel-destination-for-visas-900x504.jpg';
+    let clientKey = 'n_1WRKWWIdPREfw3xMzPgCFmFcENd4fheBqD_FmPdsk';
+    let url = 'https://api.unsplash.com/photos/random?client_id=' + clientKey + '&query=' + name + '';
+
+    getImage(url).then(imageUrl => {
+        image.setAttribute('src', imageUrl);
+    });
+
     card.appendChild(image);
 
     const body = document.createElement('div');
@@ -92,7 +96,7 @@ createCard = (name, loc, pic, desc) => {
     return card;
 }
 
-editDest = (e) => {
+const editDest = (e) => {
     const card = e.target.parentElement.parentElement;
     const title = card.children[0];
     const subtitle = card.children[1];
@@ -109,8 +113,20 @@ editDest = (e) => {
     newImage.length > 0 ? image.innerText = newImage : image.innerText = e.target.elements.image.value;
 }
 
-removeDest = (e) => {
+const removeDest = (e) => {
     const body = e.target.parentElement.parentElement;
     const card = body.parentElement;
     card.remove();
+}
+
+const getImage = async(url) => {
+
+    return await fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            return data.urls.small
+        })
+        .catch(error => 
+            console.error(error)
+        );
 }
